@@ -1,7 +1,8 @@
 import datetime
 import time
 import requests
-from funcs import funcs
+from .funcs import funcs
+from .binance_handler import _check_symbol
 
 MAINLINK = " https://fapi.binance.com"
 
@@ -16,20 +17,25 @@ def _new_order(**kwargs):
     rq = funcs.post_v3(lnk,**kwargs)
     return rq
 
-
+# def _send_order()
 
 def _buy_order(**kwargs):
+    _check_symbol(kwargs["symbol"])
     data = {"side":"BUY","recvWindow": 5000,"timestamp": now_timestamp()}
     kwargs.update(data)
     lnk = MAINLINK + "/fapi/v1/order"
     rq = funcs.post_v3(lnk,**kwargs)
+    print(rq.json())
     return rq
 
 def _sell_order(**kwargs):
+    _check_symbol(kwargs["symbol"])
+
     data = {"side":"SELL","recvWindow": 5000,"timestamp": now_timestamp()}
     kwargs.update(data)
     lnk = MAINLINK + "/fapi/v1/order"
     rq = funcs.post_v3(lnk,**kwargs)
+    print(rq.json())
     return rq
 
 
@@ -42,7 +48,7 @@ def market_buy_order(symbol:str,quantity:int|float )-> requests.Response:
 
 
 
-print(market_buy_order("XRPUSDT",10).content)
+# print(market_buy_order("XRPUSDT",10).content)
 """{
     "symbol":	STRING	YES
 "side":	ENUM	YES
