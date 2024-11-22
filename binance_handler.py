@@ -61,12 +61,16 @@ def _check_symbol(symbol) :
         raise SymbolNotFound()
     
     
-
-
+def _quantity_precision(symbol:str, amount:float|int)->float:
+    data = open_json(RESTRUCTURED_DATA)
+    if type(amount) is int:
+        return amount
+    data[symbol]
+    return round(amount,data[symbol]['quantityPrecision'])
 def minimum_quantity(symbol:str)-> float:
     _check_symbol(symbol=symbol)
-
-    return minimum_notional(symbol=symbol)/symbol_price(symbol=symbol)
+    quantity = (minimum_notional(symbol=symbol)/symbol_price(symbol=symbol))*1.5
+    return _quantity_precision(symbol,quantity)
 
 
 # print(minimum_margin("BTCUSDT"))

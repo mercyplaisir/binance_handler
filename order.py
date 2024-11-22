@@ -25,7 +25,7 @@ def _buy_order(**kwargs):
     kwargs.update(data)
     lnk = MAINLINK + "/fapi/v1/order"
     rq = funcs.post_v3(lnk,**kwargs)
-    print(rq.json())
+    print(rq.json(),f"{kwargs}\n\n___________")
     return rq
 
 def _sell_order(**kwargs):
@@ -35,7 +35,7 @@ def _sell_order(**kwargs):
     kwargs.update(data)
     lnk = MAINLINK + "/fapi/v1/order"
     rq = funcs.post_v3(lnk,**kwargs)
-    print(rq.json())
+    print(rq.json(),f"{kwargs}\n\n___________")
     return rq
 
 
