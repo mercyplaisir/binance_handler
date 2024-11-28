@@ -1,54 +1,61 @@
 import datetime
 import time
 import requests
-from .funcs import funcs
+from ..funcs import funcs
 from .binance_handler import _check_symbol
+import binance_handler.futures.errors as bnbErrors
+
 
 MAINLINK = " https://fapi.binance.com"
 
 def now_timestamp():
     return int(round(time.time() * 1000))-2500
+
 def binance_timestamp():  
     rs = requests.get("https://fapi.binance.com/fapi/v1/time")
     return rs.json()['serverTime']
 
-def _new_order(**kwargs):
+def _order_check(rq:requests.Response) ->dict:
+    if rq.json().get('orderId') is not None:
+        return rq.json()
+    raise bnbErrors.OrderNotSent
+
+def _new_order(**kwargs) -> dict:# -> Any:
     lnk = MAINLINK + "/fapi/v1/order"
     rq = funcs.post_v3(lnk,**kwargs)
-    return rq
+    print(rq.json(),f"\n{kwargs}___________")
+    return _order_check(rq)
 
-# def _send_order()
-
-def _buy_order(**kwargs):
+def _buy_order(**kwargs) ->dict:
     _check_symbol(kwargs["symbol"])
     data = {"side":"BUY","recvWindow": 5000,"timestamp": now_timestamp()}
     kwargs.update(data)
-    lnk = MAINLINK + "/fapi/v1/order"
-    rq = funcs.post_v3(lnk,**kwargs)
-    print(rq.json(),f"{kwargs}\n\n___________")
-    return rq
-
-def _sell_order(**kwargs):
+    return _new_order(**kwargs)
+    
+def _sell_order(**kwargs)->dict:
     _check_symbol(kwargs["symbol"])
-
     data = {"side":"SELL","recvWindow": 5000,"timestamp": now_timestamp()}
     kwargs.update(data)
-    lnk = MAINLINK + "/fapi/v1/order"
-    rq = funcs.post_v3(lnk,**kwargs)
-    print(rq.json(),f"{kwargs}\n\n___________")
-    return rq
+    return _new_order(**kwargs)
 
+def cancel_order(symbol,orderId):
+    data = {"recvWindow": 5000,"timestamp": now_timestamp()}
+    return _new_order(symbol = symbol,orderId = orderId,**data)
+    ...
 
-def market_sell_order(symbol:str,quantity:int|float )-> requests.Response:
+def market_sell_order(symbol:str,quantity:int|float )->dict:
     return _sell_order(symbol=symbol,quantity=quantity,type="MARKET")
 
+def market_close_order(symbol:str,quantity:int|float,side:str )->dict:
+    if side.upper() == "BUY":
+        return market_buy_order(symbol=symbol,quantity=quantity)
+    if side.upper() == "SELL":
+        return market_sell_order(symbol=symbol,quantity=quantity)
 
-def market_buy_order(symbol:str,quantity:int|float )-> requests.Response:
+def market_buy_order(symbol:str,quantity:int|float )->dict:
     return _buy_order(symbol=symbol,quantity=quantity,type="MARKET")
 
 
-
-# print(market_buy_order("XRPUSDT",10).content)
 """{
     "symbol":	STRING	YES
 "side":	ENUM	YES

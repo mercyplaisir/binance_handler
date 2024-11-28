@@ -30,10 +30,9 @@ def _params_v3(**kwargs):
     kwargs["signature"] = _dict_to_str(kwargs,True)
     return kwargs
 
-def get_v3(url,params):
+def get_v3(url,**params):
     params = _params_v3(**params)
-    print(PUBLICKEY)
-    rq = requests.post(url=url,params=params,headers={"X-MBX-APIKEY":PUBLICKEY})
+    rq = requests.get(url=url,params=params,headers={"X-MBX-APIKEY":PUBLICKEY})
     return rq
 
 def post_v3(url,**params):
