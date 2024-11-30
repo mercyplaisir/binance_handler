@@ -4,7 +4,7 @@ import requests
 import hmac
 import base64
 import hashlib
-
+import binance_handler.errors.errors as errors
 
 import os
 
@@ -26,16 +26,21 @@ def _dict_to_str(kwargs:dict,sign:bool=False):
         return _add_signature(msg)
     return msg
 
-def _params_v3(**kwargs):
+def _error_check(rq:requests.Response) -> requests.Response:
+    if rq.json().get('code'):
+        print(rq.json())
+        raise errors.get_error(rq.json()['code'])
+    return rq
+
+def _params_v3(**kwargs):# -> dict[str, Any]:
     kwargs["signature"] = _dict_to_str(kwargs,True)
     return kwargs
 
-def get_v3(url,**params):
+def get_v3(url,**params) -> requests.Response:
     params = _params_v3(**params)
     rq = requests.get(url=url,params=params,headers={"X-MBX-APIKEY":PUBLICKEY})
-    return rq
-
-def post_v3(url,**params):
+    return _error_check(rq)
+def post_v3(url,**params) -> requests.Response:
     params = _params_v3(**params)
     rq = requests.post(url=url,params=params,headers={"X-MBX-APIKEY":PUBLICKEY})
-    return rq
+    return _error_check(rq)

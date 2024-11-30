@@ -1,6 +1,6 @@
 import requests
 import json
-from .errors import SymbolNotFound
+from ..errors.errors import SymbolNotFound
 
 RESTRUCTURED_DATA = "binance_handler/data/restructured_data.json"
 BINANCE_EXCHANGE_INFO = "binance_handler/data/binance_exchange_info.json"
