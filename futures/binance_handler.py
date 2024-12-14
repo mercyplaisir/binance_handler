@@ -1,9 +1,11 @@
 import requests
 import json
-from ..errors.errors import SymbolNotFound
+from submodules.binance_handler.errors.errors import SymbolNotFound
 
-RESTRUCTURED_DATA = "binance_handler/data/restructured_data.json"
-BINANCE_EXCHANGE_INFO = "binance_handler/data/binance_exchange_info.json"
+FOLDER = "submodules/binance_handler/data"
+
+RESTRUCTURED_DATA = FOLDER+"/restructured_data.json"
+BINANCE_EXCHANGE_INFO = FOLDER+"/binance_exchange_info.json"
 
 def exchange_information():
     main_lnk = "https://fapi.binance.com"
@@ -26,7 +28,11 @@ def pair_price(pair:str) -> float:
     lnk = main_lnk + "/fapi/v1/ticker/price"
 
     rq = requests.get(lnk,params={"symbol":pair})
-
+    print(f"\n{__name__} price for  {pair} rq {rq.status_code} {rq.json()}\n")
+    if rq.status_code == 400:
+        raise SymbolNotFound()
+    if not rq.json().get("price"):
+        raise SymbolNotFound()
     return float(rq.json()["price"])
 
 def future_symbols():
@@ -62,10 +68,11 @@ def _check_symbol(symbol) :
     
     
 def _quantity_precision(symbol:str, amount:float|int)->float:
+    _check_symbol(symbol=symbol)
     data = open_json(RESTRUCTURED_DATA)
     if type(amount) is int:
         return amount
-    data[symbol]
+    data[symbol]                # add a check symbol function
     return round(amount,data[symbol]['quantityPrecision'])
 def minimum_quantity(symbol:str)-> float:
     _check_symbol(symbol=symbol)

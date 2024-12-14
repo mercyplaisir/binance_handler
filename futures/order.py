@@ -3,7 +3,7 @@ import time
 import requests
 from ..funcs import funcs
 from .binance_handler import _check_symbol
-import binance_handler.errors.errors as bnbErrors
+import submodules.binance_handler.errors.errors as bnbErrors
 
 
 MAINLINK = " https://fapi.binance.com"
@@ -12,7 +12,7 @@ def now_timestamp():
     return int(round(time.time() * 1000))-2500
 
 def binance_timestamp():  
-    rs = requests.get("https://fapi.binance.com/fapi/v1/time")
+    rs = requests.get(MAINLINK+"/fapi/v1/time")
     return rs.json()['serverTime']
 
 def _order_check(rq:requests.Response) ->dict:

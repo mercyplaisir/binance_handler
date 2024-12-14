@@ -1,6 +1,6 @@
 import requests
 import time
-from binance_handler.funcs import funcs
+from submodules.binance_handler.funcs import funcs
 MAIN_LINK = "https://fapi.binance.com"
 
 def now_timestamp():

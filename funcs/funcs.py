@@ -4,7 +4,7 @@ import requests
 import hmac
 import base64
 import hashlib
-import binance_handler.errors.errors as errors
+import submodules.binance_handler.errors.errors as errors
 
 import os
 
