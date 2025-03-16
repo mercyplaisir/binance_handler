@@ -3,7 +3,7 @@ import hashlib
 import hmac
 import time
 import requests
-from submodules.binance_handler.funcs import funcs
+from binance_handler.funcs import funcs
 
 MAINLINK = " https://fapi.binance.com"
 

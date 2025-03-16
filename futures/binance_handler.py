@@ -1,8 +1,8 @@
 import requests
 import json
-from submodules.binance_handler.errors.errors import SymbolNotFound
+from binance_handler.errors.errors import SymbolNotFound
 
-FOLDER = "submodules/binance_handler/data"
+FOLDER = "binance_handler/data"
 
 RESTRUCTURED_DATA = FOLDER+"/restructured_data.json"
 BINANCE_EXCHANGE_INFO = FOLDER+"/binance_exchange_info.json"

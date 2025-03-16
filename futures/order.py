@@ -3,7 +3,7 @@ import time
 import requests
 from ..funcs import funcs
 from .binance_handler import _check_symbol
-import submodules.binance_handler.errors.errors as bnbErrors
+import binance_handler.errors.errors as bnbErrors
 
 
 MAINLINK = " https://fapi.binance.com"
